@@ -1,7 +1,13 @@
+import { homedir } from 'node:os';
+import { getUpDirPath } from './up/up.js'
+
+const DEFAULT_PATH = homedir()
 const COMMANDS = {
   exit: '.exit',
+  up: 'up',
 }
 let username = 'anonymus'
+let currentPath = DEFAULT_PATH
 
 const setUserName = () => {
   const args = process.argv
@@ -21,13 +27,26 @@ const sayGoodbyeToUser = (username) => {
   process.exit();
 };
 
+const logCurrentPath = (currentPath) => process.stdout.write(`You are currently in ${currentPath}\n`)
+
 setUserName();
 sayHelloToUser(username);
+logCurrentPath(currentPath);
 process.stdin.resume()
 
 process.stdin.on('data', function(chunk, key) {
   const command = chunk.toString().trim();
   if (command === COMMANDS.exit) sayGoodbyeToUser(username)
+  if (command === COMMANDS.up) {
+    const upperDirPath = getUpDirPath(currentPath)
+    if (upperDirPath) {
+      currentPath = upperDirPath
+      logCurrentPath(currentPath)
+    } else {
+      logCurrentPath(currentPath)
+      console.log('You\'ve already reached top level\n')
+    }
+  }
 });
 
 process.on('SIGINT', () => sayGoodbyeToUser(username));
