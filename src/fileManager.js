@@ -11,6 +11,7 @@ import { rm } from './rm/rm.js';
 import { cp } from './cp/cp.js';
 import { mv } from './mv/mv.js';
 import { os } from './os/os.js';
+import { hash } from './hash/hash.js';
 
 const DEFAULT_PATH = homedir()
 const COMMANDS = {
@@ -24,7 +25,8 @@ const COMMANDS = {
   rm: 'rm',
   cp: 'cp',
   mv: 'mv',
-  os: 'os'
+  os: 'os',
+  hash: 'hash'
 }
 let username = 'anonymus'
 let currentPath = DEFAULT_PATH
@@ -114,8 +116,16 @@ process.stdin.on('data', async function(chunk) {
     await mv(currentPath, inputPath[0], inputPath[1])
   }
   if (command.startsWith(COMMANDS.os + ' ')) {
-    const inputArg = getProcessedPath(command, COMMANDS.rm.length + 1)
+    const inputArg = getProcessedPath(command, COMMANDS.os.length + 1)
     os(inputArg)
+  }
+  if (command.startsWith(COMMANDS.hash + ' ')) {
+    // try {
+      const inputPath = getProcessedPath(command, COMMANDS.hash.length + 1)
+      await hash(currentPath, inputPath)
+    // } catch (err) {
+    //   logOperationFailed(err.message)
+    // }
   }
 });
 
