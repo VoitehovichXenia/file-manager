@@ -2,6 +2,7 @@ import { homedir } from 'node:os';
 import { stat } from 'node:fs/promises';
 import { getUpDirPath } from './up/up.js'
 import { cd } from './cd/cd.js';
+import { ls } from './ls/ls.js';
 import { logOperationFailed } from './utils.js';
 
 const DEFAULT_PATH = homedir()
@@ -9,6 +10,7 @@ const COMMANDS = {
   exit: '.exit',
   up: 'up',
   cd: 'cd',
+  ls: 'ls'
 }
 let username = 'anonymus'
 let currentPath = DEFAULT_PATH
@@ -66,6 +68,9 @@ process.stdin.on('data', async function(chunk) {
     } catch (err) {
       logOperationFailed(err.message)
     }
+  }
+  if (command === COMMANDS.ls) {
+    await ls(currentPath)
   }
 });
 
