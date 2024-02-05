@@ -13,6 +13,7 @@ import { mv } from './mv/mv.js';
 import { os } from './os/os.js';
 import { hash } from './hash/hash.js';
 import { compress } from './compress/compress.js';
+import { decompress } from './decompress/decompress.js';
 
 const DEFAULT_PATH = homedir()
 const COMMANDS = {
@@ -28,7 +29,8 @@ const COMMANDS = {
   mv: 'mv',
   os: 'os',
   hash: 'hash',
-  compress: 'compress'
+  compress: 'compress',
+  decompress: 'decompress'
 }
 let username = 'anonymus'
 let currentPath = DEFAULT_PATH
@@ -133,6 +135,11 @@ process.stdin.on('data', async function(chunk) {
     const inputPath = getProcessedPath(command, COMMANDS.compress.length + 1, { flag: MULTIPLE_ARGS })
     .split(MULTIPLE_ARGS_SEPARATOR)
     await compress(currentPath, inputPath[0], inputPath[1])
+  }
+  if (command.startsWith(COMMANDS.decompress + ' ')) {
+    const inputPath = getProcessedPath(command, COMMANDS.decompress.length + 1, { flag: MULTIPLE_ARGS })
+    .split(MULTIPLE_ARGS_SEPARATOR)
+    await decompress(currentPath, inputPath[0], inputPath[1])
   }
 });
   
