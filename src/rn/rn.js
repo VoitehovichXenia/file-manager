@@ -11,7 +11,7 @@ import {
 export const rn = async (currentPath, oldFileName, newFileName) => {
   try {
     if (
-      !FILENAME_REGEXP.test(path.win32.basename(oldFileName)) ||
+      !FILENAME_REGEXP.test(path.basename(oldFileName)) ||
       !FILENAME_REGEXP.test(newFileName)
     ) throwCustomError(INVALID_INPUT_ERROR);
     const src = path.resolve(currentPath, oldFileName);

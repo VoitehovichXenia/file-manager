@@ -18,7 +18,7 @@ export const cp = async (currentPath, src, destination) => {
     let destinationPath = path.resolve(currentPath, destination);
     const destStat = await stat(destinationPath);
     if (destStat.isFile()) throwCustomError(INVALID_INPUT_ERROR);
-    const filename = path.posix.basename(srcPath);
+    const filename = path.basename(srcPath);
     destinationPath = path.resolve(destination, filename);
     try {
       const isDestFileExist = await stat(destinationPath);
