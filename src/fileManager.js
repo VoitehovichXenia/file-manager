@@ -3,14 +3,26 @@ import { stat } from 'node:fs/promises';
 import { getUpDirPath } from './up/up.js'
 import { cd } from './cd/cd.js';
 import { ls } from './ls/ls.js';
-import { logOperationFailed } from './utils.js';
+import { logOperationFailed, getProcessedPath, MULTIPLE_ARGS, MULTIPLE_ARGS_SEPARATOR } from './utils.js';
+import { cat } from './cat/cat.js';
+import { add } from './add/add.js';
+import { rn } from './rn/rn.js';
+import { rm } from './rm/rm.js';
+import { cp } from './cp/cp.js';
+import { mv } from './mv/mv.js';
 
 const DEFAULT_PATH = homedir()
 const COMMANDS = {
   exit: '.exit',
   up: 'up',
   cd: 'cd',
-  ls: 'ls'
+  ls: 'ls',
+  cat: 'cat',
+  add: 'add',
+  rn: 'rn',
+  rm: 'rm',
+  cp: 'cp',
+  mv: 'mv'
 }
 let username = 'anonymus'
 let currentPath = DEFAULT_PATH
@@ -55,7 +67,7 @@ process.stdin.on('data', async function(chunk) {
   }
   if (command.startsWith(COMMANDS.cd + ' ')) {
     try {
-      const inputPath = command.slice(3)
+      const inputPath = getProcessedPath(command, COMMANDS.cd.length + 1)
       const destination = cd(currentPath, inputPath)
       if (destination && destination !== currentPath) {
         const statit = await stat(destination)
@@ -71,6 +83,33 @@ process.stdin.on('data', async function(chunk) {
   }
   if (command === COMMANDS.ls) {
     await ls(currentPath)
+  }
+  if (command.startsWith(COMMANDS.cat + ' ')) {
+    const inputPath = getProcessedPath(command, COMMANDS.cat.length + 1)
+    await cat(currentPath, inputPath)
+  }
+  if (command.startsWith(COMMANDS.add + ' ')) {
+    const inputPath = getProcessedPath(command, COMMANDS.add.length + 1)
+    await add(currentPath, inputPath)
+  }
+  if (command.startsWith(COMMANDS.rn + ' ')) {
+    const inputPath = getProcessedPath(command, COMMANDS.rn.length + 1, { flag: MULTIPLE_ARGS })
+      .split(MULTIPLE_ARGS_SEPARATOR)
+    await rn(currentPath, inputPath[0], inputPath[1])
+  }
+  if (command.startsWith(COMMANDS.rm + ' ')) {
+    const inputPath = getProcessedPath(command, COMMANDS.rm.length + 1)
+    await rm(currentPath, inputPath)
+  }
+  if (command.startsWith(COMMANDS.cp + ' ')) {
+    const inputPath = getProcessedPath(command, COMMANDS.cp.length + 1, { flag: MULTIPLE_ARGS })
+      .split(MULTIPLE_ARGS_SEPARATOR)
+    await cp(currentPath, inputPath[0], inputPath[1])
+  }
+  if (command.startsWith(COMMANDS.mv + ' ')) {
+    const inputPath = getProcessedPath(command, COMMANDS.mv.length + 1, { flag: MULTIPLE_ARGS })
+      .split(MULTIPLE_ARGS_SEPARATOR)
+    await mv(currentPath, inputPath[0], inputPath[1])
   }
 });
 
