@@ -1,6 +1,11 @@
 import path from 'node:path';
+import { logOperationFailed } from '../utils.js';
 
 export const up = (currentPath) => {
-  const upperDirPath = path.resolve(currentPath, '../')
-  return upperDirPath === currentPath ? null : upperDirPath
-}
+  try {
+    const upperDirPath = path.resolve(currentPath, '../');
+    return upperDirPath === currentPath ? null : upperDirPath;
+  } catch (err) {
+    logOperationFailed(err.message)
+  }
+};
