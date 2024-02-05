@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-export const getUpDirPath = (currentPath) => {
+export const up = (currentPath) => {
   const upperDirPath = path.resolve(currentPath, '../')
   return upperDirPath === currentPath ? null : upperDirPath
 }

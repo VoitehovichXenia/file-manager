@@ -1,5 +1,5 @@
 import { readdir } from 'node:fs/promises'
-import { logOperationFailed } from '../utils.js'
+import { DEFAULT_EOL, logOperationFailed } from '../utils.js'
 
 
 export const ls = async (pathToDir) => {
@@ -20,10 +20,10 @@ export const ls = async (pathToDir) => {
       const leftNameSpace = nameColumnLength - 4 - rightNameSpace
       const nameColumnText = `${' '.repeat(rightNameSpace)}Name${' '.repeat(leftNameSpace)}`
       const horizontalBorderLength = INDEX_COLUMN_TEXT_LEN + nameColumnLength + TYPE_COLUMN_TEXT_LEN + 3
-      const horizontalBorder = `${'='.repeat(horizontalBorderLength)}\n`
-      const innerBorder = `${'-'.repeat(horizontalBorderLength)}\n`
+      const horizontalBorder = `${'='.repeat(horizontalBorderLength)}${DEFAULT_EOL}`
+      const innerBorder = `${'-'.repeat(horizontalBorderLength)}${DEFAULT_EOL}`
       process.stdout.write(horizontalBorder)
-      process.stdout.write(`${INDEX_COLUMN_TEXT}|${nameColumnText}|${TYPE_COLUMN_TEXT}|\n`)
+      process.stdout.write(`${INDEX_COLUMN_TEXT}|${nameColumnText}|${TYPE_COLUMN_TEXT}|${DEFAULT_EOL}`)
       process.stdout.write(horizontalBorder)
       dirContent.forEach((child, index) => {
         const rightNameSpace = Math.floor((nameColumnLength - child.name.length) / 2)
@@ -31,11 +31,11 @@ export const ls = async (pathToDir) => {
         const indexText = `${index < 10 ? ' '.repeat(5) : index < 100 ? ' '.repeat(4) : ' '.repeat(3)}${index}${index < 10 ? ' '.repeat(5) : index < 100 ? ' '.repeat(5) : ' '.repeat(3)}`
         const nameText = `${' '.repeat(rightNameSpace)}${child.name}${' '.repeat(leftNameSpace)}`
         const typeText = `${child.isDirectory() ? DIRECTORY_TYPE_TEXT : FILE_TYPE_TEXT}`
-        process.stdout.write(`${indexText}|${nameText}|${typeText}|\n`)
+        process.stdout.write(`${indexText}|${nameText}|${typeText}|${DEFAULT_EOL}`)
         process.stdout.write(innerBorder)
       })
     } else {
-      process.stdout.write(`${pathToDir} folder is empty.\n`)
+      process.stdout.write(`${pathToDir} folder is empty.${DEFAULT_EOL}`)
     }
   } catch (err) {
     logOperationFailed(err.message)

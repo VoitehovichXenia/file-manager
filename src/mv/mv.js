@@ -1,6 +1,6 @@
 import path from 'node:path'
 import { stat, rm } from 'node:fs/promises';
-import { INVALID_INPUT_ERROR, logInvalidInput, logOperationFailed, throwCustomError } from '../utils.js';
+import { DEFAULT_EOL, INVALID_INPUT_ERROR, logInvalidInput, logOperationFailed, throwCustomError } from '../utils.js';
 import { createReadStream, createWriteStream } from 'node:fs';
 import { pipeline } from 'node:stream/promises';
 
@@ -26,7 +26,7 @@ export const mv = async (currentPath, src, destination) => {
           writableStream
         )
         await rm(srcPath)
-        process.stdout.write(`The ${srcPath} has been moved into ${destinationPath}\n`)
+        process.stdout.write(`The ${srcPath} has been moved into ${destinationPath}${DEFAULT_EOL}`)
       } 
       else logOperationFailed(err.message)
     }

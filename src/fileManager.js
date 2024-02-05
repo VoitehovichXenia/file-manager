@@ -1,15 +1,16 @@
 import { homedir } from 'node:os';
 import { stat } from 'node:fs/promises';
-import { getUpDirPath } from './up/up.js'
+import { up } from './up/up.js'
 import { cd } from './cd/cd.js';
 import { ls } from './ls/ls.js';
-import { logOperationFailed, getProcessedPath, MULTIPLE_ARGS, MULTIPLE_ARGS_SEPARATOR } from './utils.js';
+import { logOperationFailed, getProcessedPath, MULTIPLE_ARGS, MULTIPLE_ARGS_SEPARATOR, DEFAULT_EOL } from './utils.js';
 import { cat } from './cat/cat.js';
 import { add } from './add/add.js';
 import { rn } from './rn/rn.js';
 import { rm } from './rm/rm.js';
 import { cp } from './cp/cp.js';
 import { mv } from './mv/mv.js';
+import { os } from './os/os.js';
 
 const DEFAULT_PATH = homedir()
 const COMMANDS = {
@@ -22,7 +23,8 @@ const COMMANDS = {
   rn: 'rn',
   rm: 'rm',
   cp: 'cp',
-  mv: 'mv'
+  mv: 'mv',
+  os: 'os'
 }
 let username = 'anonymus'
 let currentPath = DEFAULT_PATH
@@ -39,13 +41,13 @@ const setUserName = () => {
   }
 };
 
-const sayHelloToUser = (username) => process.stdout.write(`Welcome to the File Manager, ${username}!\n\n`)
+const sayHelloToUser = (username) => process.stdout.write(`Welcome to the File Manager, ${username}!${DEFAULT_EOL.repeat(2)}`)
 const sayGoodbyeToUser = (username) => {
-  process.stdout.write(`\n\nThank you for using File Manager, ${username}, goodbye!\n`);
+  process.stdout.write(`\n\nThank you for using File Manager, ${username}, goodbye!${DEFAULT_EOL}`);
   process.exit();
 };
 
-const logCurrentPath = (currentPath) => process.stdout.write(`You are currently in ${currentPath}\n`)
+const logCurrentPath = (currentPath) => process.stdout.write(`You are currently in ${currentPath}${DEFAULT_EOL}`)
 
 setUserName();
 sayHelloToUser(username);
@@ -56,13 +58,13 @@ process.stdin.on('data', async function(chunk) {
   const command = chunk.toString().trim()
   if (command === COMMANDS.exit) sayGoodbyeToUser(username)
   if (command === COMMANDS.up) {
-    const upperDirPath = getUpDirPath(currentPath)
+    const upperDirPath = up(currentPath)
     if (upperDirPath) {
       currentPath = upperDirPath
       logCurrentPath(currentPath)
     } else {
       logCurrentPath(currentPath)
-      process.stdout.write('You\'ve already reached top level\n')
+      process.stdout.write(`You\'ve already reached top level${DEFAULT_EOL}`)
     }
   }
   if (command.startsWith(COMMANDS.cd + ' ')) {
@@ -75,7 +77,7 @@ process.stdin.on('data', async function(chunk) {
         currentPath = destination
         logCurrentPath(currentPath)
       } else if (destination === currentPath) {
-        process.stdout.write('You\'re already in this directory\n')
+        process.stdout.write(`You\'re already in this directory${DEFAULT_EOL}`)
       }
     } catch (err) {
       logOperationFailed(err.message)
@@ -103,13 +105,17 @@ process.stdin.on('data', async function(chunk) {
   }
   if (command.startsWith(COMMANDS.cp + ' ')) {
     const inputPath = getProcessedPath(command, COMMANDS.cp.length + 1, { flag: MULTIPLE_ARGS })
-      .split(MULTIPLE_ARGS_SEPARATOR)
+    .split(MULTIPLE_ARGS_SEPARATOR)
     await cp(currentPath, inputPath[0], inputPath[1])
   }
   if (command.startsWith(COMMANDS.mv + ' ')) {
     const inputPath = getProcessedPath(command, COMMANDS.mv.length + 1, { flag: MULTIPLE_ARGS })
-      .split(MULTIPLE_ARGS_SEPARATOR)
+    .split(MULTIPLE_ARGS_SEPARATOR)
     await mv(currentPath, inputPath[0], inputPath[1])
+  }
+  if (command.startsWith(COMMANDS.os + ' ')) {
+    const inputArg = getProcessedPath(command, COMMANDS.rm.length + 1)
+    os(inputArg)
   }
 });
 

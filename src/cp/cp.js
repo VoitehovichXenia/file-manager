@@ -2,7 +2,7 @@ import path from 'node:path';
 import { stat } from 'node:fs/promises';
 import { createReadStream, createWriteStream } from 'node:fs';
 import { pipeline } from 'node:stream/promises';
-import { INVALID_INPUT_ERROR, logInvalidInput, logOperationFailed, throwCustomError } from '../utils.js';
+import { DEFAULT_EOL, INVALID_INPUT_ERROR, logInvalidInput, logOperationFailed, throwCustomError } from '../utils.js';
 
 export const cp = async (currentPath, src, destination) => {
   try {
@@ -22,7 +22,7 @@ export const cp = async (currentPath, src, destination) => {
         const readableStream = createReadStream(srcPath)
         const writableStream = createWriteStream(destinationPath)
         writableStream.on('close', () => {
-          process.stdout.write(`The ${srcPath} has been copied into ${destinationPath}\n`)
+          process.stdout.write(`The ${srcPath} has been copied into ${destinationPath}${DEFAULT_EOL}`)
         })
         await pipeline(
           readableStream,

@@ -1,11 +1,14 @@
 import path from 'node:path';
+import { EOL } from 'node:os';
 import { fileURLToPath } from 'node:url';
+
+export const DEFAULT_EOL = EOL
 
 export const getFilename = (url) => fileURLToPath(url)
 export const getDirname = (url) => path.dirname(getFilename(url))
 
-export const logOperationFailed = (errMessage) => process.stdout.write(`Operation failed. ${errMessage || ''}\n`)
-export const logInvalidInput = () => process.stdout.write(`Invalid input.\n`)
+export const logOperationFailed = (errMessage) => process.stdout.write(`Operation failed. ${errMessage || ''}${EOL}`)
+export const logInvalidInput = () => process.stdout.write(`Invalid input.${EOL}`)
 
 const dequoteArg = (arg) => {
   let processedArg = arg
