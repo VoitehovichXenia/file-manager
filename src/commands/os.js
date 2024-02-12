@@ -1,13 +1,7 @@
 import { EOL, cpus, userInfo, arch } from 'node:os';
-import { logInvalidInput, logOperationFailed, DEFAULT_EOL } from '../utils.js';
+import { logInvalidInput, logOperationFailed } from '../utils/logs.js';
+import { DEFAULT_EOL, OS_COMMANDS } from '../constants.js';
 
-const OS_COMMANDS = {
-  eol: '--EOL',
-  cpus: '--cpus',
-  homedir: '--homedir',
-  username: '--username',
-  arch: '--architecture'
-};
 export const os = (arg) => {
   try {
     if (arg === OS_COMMANDS.eol) {
@@ -17,7 +11,8 @@ export const os = (arg) => {
       process.stdout.write(`The operating system cpus:${DEFAULT_EOL}`);
       const cpusInfo = cpus();
       if (cpusInfo) {
-        cpusInfo.forEach((cpu, index) => process.stdout.write(`${index + 1}: ${cpu.model}${DEFAULT_EOL}`));
+        const GHZ_IN_MHZ = 0.001
+        cpusInfo.forEach((cpu, index) => process.stdout.write(`${index + 1}: ${cpu.model.trim()}, ${cpu.speed * GHZ_IN_MHZ} GHz${DEFAULT_EOL}`));
       } else throw new Error;
     }
     else if (arg === OS_COMMANDS.homedir) {

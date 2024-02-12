@@ -1,17 +1,10 @@
 import path from 'node:path';
 import { writeFile } from 'node:fs/promises';
-import {
-  logOperationFailed,
-  logInvalidInput,
-  FILENAME_REGEXP,
-  throwCustomError,
-  INVALID_INPUT_ERROR,
-  DEFAULT_EOL
-} from '../utils.js';
+import { DEFAULT_EOL, INVALID_INPUT_ERROR } from '../constants.js';
+import { logOperationFailed, logInvalidInput } from '../utils/logs.js';
 
 export const add = async (currentPath, fileName) => {
   try {
-    if (!FILENAME_REGEXP.test(fileName)) throwCustomError(INVALID_INPUT_ERROR);
     const filePath = path.resolve(currentPath, fileName);
     await writeFile(filePath, '', { flag: 'wx' });
     process.stdout.write(`Empty file was created in ${filePath}${DEFAULT_EOL}`);

@@ -1,19 +1,10 @@
 import path from 'node:path';
 import { rename } from 'node:fs/promises';
-import {
-  logOperationFailed,
-  logInvalidInput,
-  throwCustomError,
-  INVALID_INPUT_ERROR,
-  FILENAME_REGEXP, DEFAULT_EOL
-} from '../utils.js';
+import { logOperationFailed, logInvalidInput } from '../utils/logs.js';
+import { INVALID_INPUT_ERROR, DEFAULT_EOL } from '../constants.js';
 
 export const rn = async (currentPath, oldFileName, newFileName) => {
   try {
-    if (
-      !FILENAME_REGEXP.test(path.basename(oldFileName)) ||
-      !FILENAME_REGEXP.test(newFileName)
-    ) throwCustomError(INVALID_INPUT_ERROR);
     const src = path.resolve(currentPath, oldFileName);
     const destination = path.resolve(path.dirname(src), newFileName);
     await rename(src, destination);
