@@ -34,7 +34,6 @@ export const getProcessedPath = (input, commandLength, { flag } = {}) => {
   processedPath = dequoteArg(processedPath)
   return processedPath
 }
-export const FILENAME_REGEXP = /^[\w,\s-]+\.[a-zA-z]{2,}$/
 export const NOT_FILE_PATH_ERROR = 'It\'s not a valid file path'
 export const NOT_DIR_PATH_ERROR = 'It\'s not a valid directory path'
 export const INVALID_INPUT_ERROR = 'invalid_input'
