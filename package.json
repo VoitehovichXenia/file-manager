@@ -4,6 +4,9 @@
   "engines": {
     "node": ">=20.0.0"
   },
+  "scripts": {
+    "start": "node src/index.js"
+  },
   "type": "module",
   "author": "voitehocichxenia",
   "license": "ISC"
