@@ -1,11 +1,7 @@
 import path from 'node:path';
 import { writeFile } from 'node:fs/promises';
-import {
-  logOperationFailed,
-  logInvalidInput,
-  INVALID_INPUT_ERROR,
-  DEFAULT_EOL
-} from '../utils.js';
+import { DEFAULT_EOL, INVALID_INPUT_ERROR } from '../constants.js';
+import { logOperationFailed, logInvalidInput } from '../utils/logs.js';
 
 export const add = async (currentPath, fileName) => {
   try {

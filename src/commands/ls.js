@@ -1,5 +1,6 @@
-import { readdir } from 'node:fs/promises'
-import { DEFAULT_EOL, logOperationFailed } from '../utils.js'
+import { readdir } from 'node:fs/promises';
+import { logOperationFailed } from '../utils/logs.js';
+import { DEFAULT_EOL } from '../constants.js';
 
 export const ls = async (pathToDir) => {
   const DIRECTORY_TYPE = 'directory';

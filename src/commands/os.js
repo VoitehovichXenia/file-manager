@@ -1,13 +1,7 @@
 import { EOL, cpus, userInfo, arch } from 'node:os';
-import { logInvalidInput, logOperationFailed, DEFAULT_EOL } from '../utils.js';
+import { logInvalidInput, logOperationFailed } from '../utils/logs.js';
+import { DEFAULT_EOL, OS_COMMANDS } from '../constants.js';
 
-const OS_COMMANDS = {
-  eol: '--EOL',
-  cpus: '--cpus',
-  homedir: '--homedir',
-  username: '--username',
-  arch: '--architecture'
-};
 export const os = (arg) => {
   try {
     if (arg === OS_COMMANDS.eol) {

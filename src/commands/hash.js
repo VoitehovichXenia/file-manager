@@ -2,14 +2,9 @@ import path from 'node:path'
 import { createHash } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
-import {
-  DEFAULT_EOL,
-  NOT_FILE_PATH_ERROR,
-  logOperationFailed,
-  throwCustomError,
-  logCurrentPath,
-  logPrompt
-} from '../utils.js';
+import { DEFAULT_EOL, NOT_FILE_PATH_ERROR } from '../constants.js';
+import { logOperationFailed, logAfterEachOperation } from '../utils/logs.js';
+import { throwCustomError } from '../utils/throwCustomError.js';
 
 export const hash = async (currentPath, fileToHash) => {
   try {
@@ -23,8 +18,7 @@ export const hash = async (currentPath, fileToHash) => {
     readableStream.on('end', () => {
       const hexHash = hash.digest('hex');
       process.stdout.write(`Hashed: ${hexHash}${DEFAULT_EOL}`);
-      logCurrentPath(currentPath);
-      logPrompt();
+      logAfterEachOperation(currentPath);
     });
     readableStream.on('err', (err) => logOperationFailed(err.message));
   } catch (err) {

@@ -1,15 +1,9 @@
 import path from 'node:path';
 import { createReadStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
-import {
-  DEFAULT_EOL,
-  EMPTY_FILE_MESSAGE,
-  NOT_FILE_PATH_ERROR,
-  logOperationFailed,
-  throwCustomError,
-  logCurrentPath,
-  logPrompt
-} from '../utils.js';
+import { DEFAULT_EOL, EMPTY_FILE_MESSAGE, NOT_FILE_PATH_ERROR } from '../constants.js';
+import { logOperationFailed, logAfterEachOperation } from '../utils/logs.js';
+import { throwCustomError } from '../utils/throwCustomError.js';
 
 export const cat = async (currentPath, pathToFile) => {
   try {
@@ -26,9 +20,7 @@ export const cat = async (currentPath, pathToFile) => {
     });
     readableStream.on('end', () => {
       process.stdout.write(`${isFileEmpty ? EMPTY_FILE_MESSAGE : ''}${DEFAULT_EOL}`);
-      process.stdin.resume();
-      logCurrentPath(currentPath)
-      logPrompt()
+      logAfterEachOperation(currentPath)
     });
     readableStream.on('error', (err) => logOperationFailed(err.message));
   } catch (err) {
