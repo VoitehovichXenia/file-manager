@@ -1,4 +1,4 @@
-import { up } from '../commands/up.js'
+import { up } from '../commands/up.js';
 import { cd } from '../commands/cd.js';
 import { ls } from '../commands/ls.js';
 import { cat } from '../commands/cat.js';
@@ -10,6 +10,7 @@ import { os } from '../commands/os.js';
 import { hash } from '../commands/hash.js';
 import { compress } from '../commands/compress.js';
 import { decompress } from '../commands/decompress.js';
+import { mkdir } from '../commands/mkdir.js';
 
 import { COMMANDS, getCurrentPath, setCurrentPath, DEFAULT_EOL, MULTIPLE_ARGS_FLAG, MULTIPLE_ARGS_SEPARATOR, COMMAND_MV } from '../constants.js';
 import { getProcessedPath } from '../utils/getProcessedPath.js';
@@ -24,7 +25,7 @@ export const handleUserInput = async ({ userInput, readlineInterface }) => {
     if (upperDirPath) {
       setCurrentPath(upperDirPath);
     } else {
-      process.stdout.write(`You\'ve already reached top level${DEFAULT_EOL}`);
+      process.stdout.write(`You've already reached top level${DEFAULT_EOL}`);
     }
   }
   else if (command.startsWith(COMMANDS.cd + ' ')) {
@@ -35,7 +36,7 @@ export const handleUserInput = async ({ userInput, readlineInterface }) => {
     }
   }
   else if (command === COMMANDS.ls) {
-    await ls(currentPath)
+    await ls(currentPath);
   }
   else if (command.startsWith(COMMANDS.cat + ' ')) {
     const inputPath = getProcessedPath(command, COMMANDS.cat.length + 1);
@@ -79,8 +80,12 @@ export const handleUserInput = async ({ userInput, readlineInterface }) => {
     const inputPath = getProcessedPath(command, COMMANDS.decompress.length + 1, { flag: MULTIPLE_ARGS_FLAG }).split(MULTIPLE_ARGS_SEPARATOR);
     await decompress(currentPath, inputPath[0], inputPath[1]);
   }
+  else if (command.startsWith(COMMANDS.mkdir + ' ')) {
+    const inputPath = getProcessedPath(command, COMMANDS.mkdir.length + 1,);
+    await mkdir(currentPath, inputPath);
+  }
   else {
     logInvalidInput();
   }
   return true;
-}
+};

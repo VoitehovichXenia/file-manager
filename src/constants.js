@@ -19,6 +19,7 @@ export const COMMANDS = {
   hash: 'hash',
   compress: 'compress',
   decompress: 'decompress',
+  mkdir: 'mkdir'
 };
 export const OS_COMMANDS = {
   eol: '--EOL',
