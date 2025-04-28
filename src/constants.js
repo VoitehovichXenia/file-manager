@@ -1,8 +1,4 @@
-import { homedir, EOL } from "node:os";
-
-export const COMMAND_CP = 'cp';
-export const COMMAND_MV = 'mv';
-export const COMMAND_RM = 'rm';
+import { homedir, EOL } from 'node:os';
 
 export const COMMANDS = {
   exit: '.exit',
@@ -29,7 +25,9 @@ export const OS_COMMANDS = {
   arch: '--architecture'
 };
 
-export const DEFAULT_EOL = EOL
+export const DEFAULT_EOL = EOL;
+
+export const DEFAULT_CLI_USERNAME_NAME = 'username'
 
 let username = 'Anonymus';
 export const getUsername = () => username;
@@ -47,12 +45,9 @@ export const setCurrentPath = (newPath) => {
   }
 };
 
-export const MULTIPLE_ARGS_FLAG = 'multiple_args'
-export const MULTIPLE_ARGS_SEPARATOR = '|'
+export const MULTIPLE_ARGS_FLAG = 'multiple_args';
+export const MULTIPLE_ARGS_SEPARATOR = '|';
 
-export const FILE_ALREADY_EXISTS_MESSAGE = 'File already exists in the destination folder'
-export const NOT_FILE_PATH_ERROR = 'It\'s not a valid file path'
-export const NOT_DIR_PATH_ERROR = 'It\'s not a valid directory path'
-export const INVALID_INPUT_ERROR = 'invalid_input'
-export const ALREADY_IN_DIR_ERROR = 'You\'re already in this directory'
-export const EMPTY_FILE_MESSAGE = 'This file is empty.'
+export const FILE_ALREADY_EXISTS_MESSAGE = 'File already exists in the destination folder';
+export const ALREADY_IN_DIR_ERROR = 'You\'re already in this directory';
+export const EMPTY_FILE_MESSAGE = 'This file is empty.';
