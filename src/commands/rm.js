@@ -1,15 +1,13 @@
-import path from 'node:path';
+import { resolve } from 'node:path';
 import { rm as coreRm } from 'node:fs/promises';
-import { COMMAND_RM, DEFAULT_EOL } from '../constants.js';
+import { DEFAULT_EOL } from '../constants.js';
 import { logOperationFailed } from '../utils/logs.js';
 
-export const rm = async (currentPath, inputPath, flag = COMMAND_RM) => {
+export const rm = async (currentPath, inputPath, { onlyFiles, messageLog }) => {
   try {
-    const pathToRemove = path.resolve(currentPath, inputPath);
-    await coreRm(pathToRemove, {
-      recursive: true
-    });
-    if (flag === COMMAND_RM) process.stdout.write(`The ${pathToRemove} has been removed${DEFAULT_EOL}`);
+    const pathToRemove = resolve(currentPath, inputPath);
+    await coreRm(pathToRemove, { recursive: !onlyFiles });
+    if (messageLog) process.stdout.write(`The ${pathToRemove} has been removed${DEFAULT_EOL}`);
   } catch (err) {
     logOperationFailed(err.message);
   }

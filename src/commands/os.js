@@ -11,7 +11,7 @@ export const os = (arg) => {
       process.stdout.write(`The operating system cpus:${DEFAULT_EOL}`);
       const cpusInfo = cpus();
       if (cpusInfo) {
-        const GHZ_IN_MHZ = 0.001
+        const GHZ_IN_MHZ = 0.001;
         cpusInfo.forEach((cpu, index) => process.stdout.write(`${index + 1}: ${cpu.model.trim()}, ${cpu.speed * GHZ_IN_MHZ} GHz${DEFAULT_EOL}`));
       } else throw new Error;
     }
