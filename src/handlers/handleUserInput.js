@@ -1,5 +1,3 @@
-import { resolve } from 'node:path';
-
 import { up } from '../commands/up.js';
 import { cd } from '../commands/cd.js';
 import { ls } from '../commands/ls.js';
@@ -78,7 +76,7 @@ export const handleUserInput = async ({ userInput, readlineInterface }) => {
     else if (command.startsWith(COMMANDS.rm + ' ')) {
       const filename = getProcessedPath(command, COMMANDS.rm.length + 1);
 
-      if (!(await validateRMInput(currentPath, filename))) throw new Error;
+      if (!validateRMInput(currentPath, filename)) throw new Error;
 
       await rm(currentPath, filename, { onlyFiles: true, messageLog: true });
     }
@@ -100,7 +98,7 @@ export const handleUserInput = async ({ userInput, readlineInterface }) => {
     else if (command.startsWith(COMMANDS.hash + ' ')) {
       const filename = getProcessedPath(command, COMMANDS.hash.length + 1);
 
-      if(!(await validateHASHInput(currentPath, filename))) throw new Error;
+      if(!validateHASHInput(currentPath, filename)) throw new Error;
 
       await hash(currentPath, filename);
     }
@@ -108,8 +106,8 @@ export const handleUserInput = async ({ userInput, readlineInterface }) => {
       const [filename, destination] = getProcessedPath(command, COMMANDS.compress.length + 1, { flag: MULTIPLE_ARGS_FLAG }).split(MULTIPLE_ARGS_SEPARATOR);
 
       if (!(await validateCOMPRESSInput(currentPath, filename, destination))) throw new Error;
-
-      await compress(currentPath);
+      
+      await compress(currentPath, filename, destination);
     }
     else if (command.startsWith(COMMANDS.decompress + ' ')) {
       const [filename, destination] = getProcessedPath(command, COMMANDS.decompress.length + 1, { flag: MULTIPLE_ARGS_FLAG }).split(MULTIPLE_ARGS_SEPARATOR);
@@ -121,7 +119,7 @@ export const handleUserInput = async ({ userInput, readlineInterface }) => {
     else if (command.startsWith(COMMANDS.mkdir + ' ')) {
       const destination = getProcessedPath(command, COMMANDS.mkdir.length + 1,);
 
-      if (!(await validateMKDIRInput(currentPath, destination))) throw new Error;
+      if (!validateMKDIRInput(currentPath, destination)) throw new Error;
 
       await mkdir(currentPath, destination);
     }

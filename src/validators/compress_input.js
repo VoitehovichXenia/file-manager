@@ -10,5 +10,5 @@ export const validateCOMPRESSInput = async (src, filename, destination) => {
   const destinationPath = resolve(src, destination);
   const destStat = await getDestStat(destinationPath);
       
-  return !destStat;
+  return destStat;
 };

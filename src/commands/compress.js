@@ -13,14 +13,14 @@ export const compress = async (currentPath, src, destination) => {
     const filename = srcFilename.slice(0, extIndex) + '.br';
     const destinationPath = resolve(currentPath, destination, filename);
     const writableStream = createWriteStream(destinationPath);
-    writableStream.on('close', () => {
-      process.stdout.write(`The file ${srcPath} is compressed in ${destinationPath}${DEFAULT_EOL}`);
-    });
+   
     await pipeline(
       createReadStream(srcPath),
       createBrotliCompress(),
       writableStream
     );
+
+    process.stdout.write(`The file ${srcPath} is compressed in ${destinationPath}${DEFAULT_EOL}`);
   } catch (err) {
     logOperationFailed(err.message);
   }
