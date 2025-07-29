@@ -8,25 +8,22 @@ import { rm } from '../commands/rm.js';
 import { cp } from '../commands/cp.js';
 import { os } from '../commands/os.js';
 import { hash } from '../commands/hash.js';
-import { compress } from '../commands/compress.js';
-import { decompress } from '../commands/decompress.js';
 import { mkdir } from '../commands/mkdir.js';
+import { zlib, COMPRESS_FLAG, DECOMPRESS_FLAG } from '../commands/zlib.js';
 
 import { validateCPInput } from '../validators/cp_input.js';
 import { validateCDInput } from '../validators/cd_input.js';
 import { validateCATInput } from '../validators/cat_input.js';
 import { validateADDInput } from '../validators/add_input.js';
 import { validateRMInput } from '../validators/rm_input.js';
-import { validateCOMPRESSInput } from '../validators/compress_input.js';
-import { validateDECOMPRESSInput } from '../validators/decompress_input.js';
+import { validateZlibInput } from '../validators/zlib.js';
 import { validateHASHInput } from '../validators/hash_input.js';
 import { validateMKDIRInput } from '../validators/mkdir_input.js';
 import { validateRNInput } from '../validators/rn_input.js';
 
-import { COMMANDS, getCurrentPath, setCurrentPath, DEFAULT_EOL, MULTIPLE_ARGS_FLAG, MULTIPLE_ARGS_SEPARATOR, ALREADY_IN_DIR_ERROR } from '../constants.js';
+import { COMMANDS, getCurrentPath, setCurrentPath, DEFAULT_EOL, MULTIPLE_ARGS_FLAG, MULTIPLE_ARGS_SEPARATOR } from '../constants.js';
 import { getProcessedPath } from '../utils/getProcessedPath.js';
 import { logAfterEachOperation, logInvalidInput } from '../utils/logs.js';
-
 
 export const handleUserInput = async ({ userInput, readlineInterface }) => {
   const command = userInput.toString().trim();
@@ -102,19 +99,17 @@ export const handleUserInput = async ({ userInput, readlineInterface }) => {
 
       await hash(currentPath, filename);
     }
-    else if (command.startsWith(COMMANDS.compress + ' ')) {
-      const [filename, destination] = getProcessedPath(command, COMMANDS.compress.length + 1, { flag: MULTIPLE_ARGS_FLAG }).split(MULTIPLE_ARGS_SEPARATOR);
+    else if (command.startsWith(COMMANDS.compress + ' ') || command.startsWith(COMMANDS.decompress + ' ')) {
+      const isCompress = command.startsWith(COMMANDS.compress + ' ')
+      const commandLength = isCompress
+        ? COMMANDS.compress.length + 1 
+        : COMMANDS.decompress.length + 1
+      const flag = isCompress ? COMPRESS_FLAG : DECOMPRESS_FLAG
+      const [filename, destination] = getProcessedPath(command, commandLength, { flag: MULTIPLE_ARGS_FLAG }).split(MULTIPLE_ARGS_SEPARATOR);
 
-      if (!(await validateCOMPRESSInput(currentPath, filename, destination))) throw new Error;
+      if (!(await validateZlibInput(currentPath, filename, destination, flag))) throw new Error;
       
-      await compress(currentPath, filename, destination);
-    }
-    else if (command.startsWith(COMMANDS.decompress + ' ')) {
-      const [filename, destination] = getProcessedPath(command, COMMANDS.decompress.length + 1, { flag: MULTIPLE_ARGS_FLAG }).split(MULTIPLE_ARGS_SEPARATOR);
-
-      if (!(await validateDECOMPRESSInput(currentPath, filename, destination))) throw new Error;
-
-      await decompress(currentPath, filename, destination);
+      await zlib(currentPath, filename, destination, flag);
     }
     else if (command.startsWith(COMMANDS.mkdir + ' ')) {
       const destination = getProcessedPath(command, COMMANDS.mkdir.length + 1,);
